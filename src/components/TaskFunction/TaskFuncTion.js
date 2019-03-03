@@ -3,10 +3,19 @@ import StatusFilter from './StatusFilter';
 import LabelFilter from './LabelFilter';
 import PriorityFilter from './PriorityFilter';
 import SortSelection from './SortSelection';
-
+import {connect} from 'react-redux';
+import {changeToAdd} from '../../redux/actions/ChangeAddStatus'
 class TaskFuncTion extends Component {
 
+    constructor (props)
+    {
+      super(props);
+      this.createTaskButtonHandle=this._createTaskButtonHandle.bind(this);
+    }
 
+    _createTaskButtonHandle=()=>{
+      this.props.changeToAdd();
+    }
     render() {
         return (
                 <div className="col-md-3 text-center px-0">
@@ -21,10 +30,11 @@ class TaskFuncTion extends Component {
                   className="btn my-3 btn--newTask"
                   data-toggle="modal"
                   data-target="#modalTask"
+                  onClick={()=>this.createTaskButtonHandle()}
                 >
                   <i className="fa fa-pencil-square-o" />
                   Tạo Task mới
-        </button>
+                </button>
                 {/* Filter */}
                 <div className="px-3">
                   <StatusFilter />
@@ -37,4 +47,11 @@ class TaskFuncTion extends Component {
     }
 }
 
-export default TaskFuncTion;
+const mapDispatchToProps=(dispatch)=>{
+  return {
+    changeToAdd: ()=> {
+      dispatch(changeToAdd())
+    },
+  };
+}
+export default connect(null,mapDispatchToProps)(TaskFuncTion);

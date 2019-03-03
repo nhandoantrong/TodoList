@@ -3,13 +3,17 @@ import WorkItem from './WorkItem';
 
 class WorkList extends Component {
 
-    renderWorkItem = () =>{
-        
+    renderWorkItem = (data) =>{
+        return data.map((workItem, key)=>{
+            return <WorkItem item={workItem} key={key} index={key} />
+        })
     }
 
     render() {
+        let {data} = this.props;
         return (
-                              <div className="col-md-9 px-0">
+
+            <div className="col-md-9 px-0">
                 <div className="container-fluid px-0">
                   <div className="row header header--right d-flex align-items-center mx-0">
                     <div className="col-md-6">
@@ -44,7 +48,7 @@ class WorkList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <WorkItem />
+                        {this.renderWorkItem(data)}
                     </tbody>
                   </table>
                 </div>

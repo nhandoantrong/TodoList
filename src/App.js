@@ -3,23 +3,22 @@ import './App.css';
 import TaskFuncTion from './components/TaskFunction/TaskFuncTion';
 import WorkList from './components/WorkList/WorkList';
 import WorkModal from './components/WorkModal';
-
+import data from './data/TasksData'
 class App extends Component {
-  data=[
-  {
-    name : 'Soạn ReactJS',
-    label: ["frontend",'api'],
-    priority: 'cao',
-    workers:['user_2','user_3'],
-    status: 'finished',
-  },
-  {
-    name : 'Soạn Python	',
-    label: ["backend",'issue','api'],
-    priority: 'cao',
-    workers:['user_3'],
-    status: 'finished',
-  }]
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data:data,
+      isAdd: true,
+    };
+  }
+
+  changeAddingState = (isAdd)=>{
+    this.setState({
+      isAdd
+    })
+  } 
 
   render() {
 
@@ -33,7 +32,7 @@ class App extends Component {
             <div className="row">
               {/* PANEL */}
               <TaskFuncTion />
-              <WorkList data={this.data} /> 
+              <WorkList data={this.state.data} /> 
             </div>
           </div>
           {/* The Modal */}
