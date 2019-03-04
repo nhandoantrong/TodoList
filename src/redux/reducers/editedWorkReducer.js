@@ -15,10 +15,10 @@ const editedWorkReducer = (work=initialWork, action)=>{
     switch (action.type) {
         case actionTypes.CHANGE_WORK:{
             work=action.work;
-            console.log(work)
             return work
         }
         case actionTypes.CHANGE_TO_INITIAL_WORK:{
+            work=initialWork;
             return work=initialWork
         }
         default:{

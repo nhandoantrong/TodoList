@@ -3,22 +3,41 @@ import './App.css';
 import TaskFuncTion from './components/TaskFunction/TaskFuncTion';
 import WorkList from './components/WorkList/WorkList';
 import WorkModal from './components/WorkModal';
-import data from './data/TasksData'
+import mockupData from './data/TasksData'
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      data:data,
+      data:[],
       isAdd: true,
     };
   }
 
+  componentDidMount(){
+    if (localStorage.getItem('userList'))
+    {
+      this.setState({
+        data:JSON.parse(localStorage.getItem('userList'))
+      })
+    }
+    else {
+      localStorage.setItem('userList',JSON.stringify(mockupData));
+      this.setState({
+        data:JSON.parse(localStorage.getItem('userList'))
+      })
+    }
+  }
+  
   changeAddingState = (isAdd)=>{
     this.setState({
       isAdd
     })
   } 
+
+  addWork = (work) =>{
+    console.log(work);
+  }
 
   render() {
 
@@ -36,7 +55,7 @@ class App extends Component {
             </div>
           </div>
           {/* The Modal */}
-          <WorkModal />
+          <WorkModal addWork={this.addWork}/>
         </div>
 
       </div>

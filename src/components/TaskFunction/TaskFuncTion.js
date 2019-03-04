@@ -5,6 +5,8 @@ import PriorityFilter from './PriorityFilter';
 import SortSelection from './SortSelection';
 import {connect} from 'react-redux';
 import {changeToAdd} from '../../redux/actions/ChangeAddStatus'
+import {changeToInitialWork} from '../../redux/actions/EditWork'
+
 class TaskFuncTion extends Component {
 
     constructor (props)
@@ -15,6 +17,7 @@ class TaskFuncTion extends Component {
 
     _createTaskButtonHandle=()=>{
       this.props.changeToAdd();
+      this.props.changeToInitialWork();
     }
     render() {
         return (
@@ -22,7 +25,7 @@ class TaskFuncTion extends Component {
                 <div className="header header--left d-flex align-items-center">
                   <img src="./img/user_1.jpg" className="ml-2 user" alt="liar" />
                   <h3 className="text-white d-inline font-weight-light ml-2">
-                    Lê Quang Song
+                    Đoàn Trọng Nhân
                 </h3>
                 </div>
                 <button
@@ -47,11 +50,14 @@ class TaskFuncTion extends Component {
     }
 }
 
-const mapDispatchToProps=(dispatch)=>{
-  return {
-    changeToAdd: ()=> {
-      dispatch(changeToAdd())
-    },
-  };
-}
-export default connect(null,mapDispatchToProps)(TaskFuncTion);
+// const mapDispatchToProps=(dispatch)=>{
+//   return {
+//     changeToAdd: ()=> {
+//       dispatch(changeToAdd())
+//     },
+//   };
+// }
+export default connect(null,{
+  changeToAdd,
+  changeToInitialWork
+})(TaskFuncTion);
