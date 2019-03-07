@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
 import WorkItem from './WorkItem';
 
+import {connect} from 'react-redux';
 class WorkList extends Component {
 
+    state ={
+      data:this.props.data
+    }
     renderWorkItem = (data) =>{
         return data.map((workItem, key)=>{
             return <WorkItem item={workItem} key={key} index={key} />
         })
     }
 
+    componentWillReceiveProps(nextProps){
+      if (this.props.data!==nextProps.data){
+        this.setState({
+          data:nextProps.data,
+        })
+      }
+    }
+
     render() {
-        let {data} = this.props;
         return (
 
             <div className="col-md-9 px-0">
@@ -48,7 +59,7 @@ class WorkList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                        {this.renderWorkItem(data)}
+                        {this.renderWorkItem(this.state.data)}
                     </tbody>
                   </table>
                 </div>
@@ -58,4 +69,7 @@ class WorkList extends Component {
     }
 }
 
-export default WorkList;
+const mapStateToProps=(state) => ({
+  data:state.renderedList,
+})
+export default connect(mapStateToProps)(WorkList);

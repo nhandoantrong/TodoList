@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {addWork,editWork} from '../redux/actions/dataAction'
 class WorkModal extends Component {
 
 
@@ -7,22 +8,36 @@ class WorkModal extends Component {
         super(props);
         // Don't call this.setState() here!
         this.state = {
-            work: {
-                id: '',
-                name: "",
-                labelArr: [],
-                priority: '',
-                memberIDArr: [],
-                status: '',
-                description: ""
-            },
+            work: this.props.work,
             isAdd: this.props.isAdd
         };
     }
 
     onSubmit = (event) => {
         event.preventDefault();
-        this.props.addWork(this.state.work);
+        if (this.props.isAdd)
+        {
+            this.setState({
+                work:{
+                    ...this.state.work,
+                    id: new Date().getTime()
+                }
+            },()=>{
+                this.props.addWork(this.state.work);
+                this.setState({
+                    work: this.props.work,
+                },()=>{
+                    document.getElementById("hidePopUpBtn").click();
+                })
+            })
+
+        }
+        else 
+        {
+            this.props.editWork(this.state.work);
+            document.getElementById("hidePopUpBtn").click();
+
+        }
     }
 
     checkBoxClickHandle = (event) => {
@@ -54,7 +69,7 @@ class WorkModal extends Component {
         this.setState({
             work: {
                 ...this.state.work,
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.name!=='priority'? event.target.value: parseInt(event.target.value)
             }
         })
     }
@@ -120,7 +135,7 @@ class WorkModal extends Component {
                                         <select className="form-control" id="priority"
                                             name='priority'
                                             onChange={this.onchange}
-                                            value={this.state.work.priority}
+                                            value={this.state.work.priority }
                                         >
                                             <option value="2" >Thấp</option>
                                             <option value="3">Trung bình</option>
@@ -251,6 +266,7 @@ class WorkModal extends Component {
                                         type="button"
                                         className="btn btn-danger"
                                         data-dismiss="modal"
+                                        id="hidePopUpBtn"
                                     >
                                         Close
                                 </button>
@@ -277,4 +293,13 @@ const mapStateToProps = (state) => ({
     isAdd: state.isAddReducer,
     work: state.editedWorkReducer,
 })
-export default connect(mapStateToProps)(WorkModal);
+
+const mapDispatchToProps = (dispatch) =>({
+    addWork: (work)=>{
+        dispatch(addWork(work))
+    },
+    editWork: (work) =>{
+        dispatch (editWork(work))
+    }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(WorkModal);

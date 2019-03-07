@@ -1,13 +1,13 @@
-import * as actionTypes from '../actionTypes/editedWork';
+import * as actionTypes from '../actionTypes/actionTypesConstant';
 
 
 const initialWork={
     id: '',
     name: "",
     labelArr: [],
-    priority: '', 
+    priority: 2 , 
     memberIDArr: [],
-    status: '', 
+    status: 1, 
     description: ""
 }
 
@@ -18,11 +18,10 @@ const editedWorkReducer = (work=initialWork, action)=>{
             return work
         }
         case actionTypes.CHANGE_TO_INITIAL_WORK:{
-            work=initialWork;
             return work=initialWork
         }
         default:{
-            return work=initialWork;
+            return work;
         }
     }
 }

@@ -1,4 +1,5 @@
-import * as actionTypes from '../actionTypes/isAddChange';
+import * as actionTypes from '../actionTypes/actionTypesConstant';
+
 
 const changeAddState = (isAdd = false, action) => {
     switch (action.type) {

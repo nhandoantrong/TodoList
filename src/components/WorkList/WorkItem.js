@@ -4,13 +4,16 @@ import Label from './Label';
 import {connect} from 'react-redux';
 import {changeToEdit} from '../../redux/actions/ChangeAddStatus';
 import {changeWork} from '../../redux/actions/EditWork';
+import {deleteWork} from '../../redux/actions/dataAction'
 class WorkItem extends Component {
-
     editButtonHandle= (work)=>{
         this.props.changeToEdit();
         this.props.changeWork(work);
     }
 
+    deleteButtonHandle= (work)=>{
+        this.props.deleteWork(work)
+    }
 
     renderLabel=(labels)=>{
         return labels.map((label,index)=>{
@@ -126,6 +129,7 @@ class WorkItem extends Component {
                     <button
                         type="button"
                         className="btn btn-outline-danger"
+                        onClick={this.deleteButtonHandle.bind(this,item)}
                     >
                         Xóa
                     </button>
@@ -146,6 +150,9 @@ const mapDispatchToProps=(dispatch)=>(
       },
       changeWork: (work)=>{
           dispatch(changeWork(work));
+      },
+      deleteWork: (work) =>{
+          dispatch(deleteWork(work))
       }
     }
 )

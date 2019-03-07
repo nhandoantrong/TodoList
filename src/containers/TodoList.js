@@ -1,0 +1,61 @@
+import React, { Component } from 'react';
+import TaskFuncTion from '../components/TaskFunction/TaskFuncTion';
+import WorkList from '../components/WorkList/WorkList';
+import WorkModal from '../components/WorkModal';
+
+
+//redux
+import {connect}  from 'react-redux';
+import {renderChangedList} from '../redux/actions/renderList';
+class TodoList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          data:this.props.data,
+        };
+      }
+    
+      componentDidMount(){
+        this.props.changeRenderData(this.state.data);
+      }
+
+      componentWillReceiveProps(nextProps){
+        if (this.props.data!==nextProps.data)
+        {
+          this.setState({
+            data:nextProps.data
+          },()=>{
+            this.props.changeRenderData(this.state.data);
+          })
+        }
+      }
+    render() {
+        return (
+            <div>
+                <div>
+          <h1 className="text-center my-2">QUẢN LÝ CÔNG VIỆC</h1>
+          <div className="container-fluid">
+            <div className="row">
+              {/* PANEL */}
+              <TaskFuncTion />
+              <WorkList /> 
+            </div>
+          </div>
+          {/* The Modal */}
+          <WorkModal/>
+        </div>
+            </div>
+        );
+    }
+}
+
+
+const mapStateToProps=(state) => ({
+  data:state.dataReducer
+})
+const mapDispatchToProps=(dispatch) =>({
+  changeRenderData : (workList) =>{
+    dispatch(renderChangedList(workList))
+  }
+})
+export default connect(mapStateToProps,mapDispatchToProps)(TodoList);
