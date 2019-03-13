@@ -9,7 +9,8 @@ import {editRenderedList,deleteWorkInRenderedList} from '../../redux/actions/ren
 
 
 //drag and drop
-import { DragSource } from 'react-dnd';
+import { findDOMNode } from 'react-dom'
+import { DragSource, DropTarget } from 'react-dnd'
 
 class WorkItem extends Component {
 
@@ -134,10 +135,10 @@ class WorkItem extends Component {
     }
 
     render() {
-        let {index,item,isDragging,connectDragSource}= this.props;
-        return connectDragSource(
+        let {index,item,isDragging,connectDragSource,connectDropTarget}= this.props;
+        return connectDragSource( connectDropTarget(
 
-            <tr>
+            <tr style={{opacity: isDragging? "0" : "1"}}>
                 <td className="text-center">{index+1}</td>
                 <td className="text-center">{item.name}</td>
                 <td className="text-center">
@@ -200,7 +201,7 @@ class WorkItem extends Component {
                 </td>
             </tr>
 
-        );
+        ));
     }
 }
 
@@ -227,11 +228,10 @@ const mapDispatchToProps=(dispatch)=>(
     }
 )
 
-
+/// delete by dragging
 const typeToDelete ="WORK_ITEM_TO_DELETE";
 const workToDeleteSource ={
     beginDrag(props){
-        console.log ("hi");
         return props.item;
     },
     endDrag(props,monitor,component){
@@ -243,11 +243,70 @@ const workToDeleteSource ={
     }
 }
 
-const collect =(connect, monitor) =>({
+const sourceCollect =(connect, monitor) =>({
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging
+    isDragging: monitor.isDragging()
 
 })
-export default connect(null,mapDispatchToProps)( DragSource(typeToDelete, workToDeleteSource , collect)(WorkItem));
+
+
+const workToSortSource = {
+    beginDrag(props) {
+      return {
+        id: props.id,
+        index: props.index,
+      }
+    },
+  }
+
+const typeToSort="TYPE_TO_SORT"
+
+const workTarget = {
+    hover(props, monitor, component) {
+      if (!component) {
+        return null
+      }
+      const dragIndex = monitor.getItem().index
+      const hoverIndex = props.index
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
+      // Get vertical middle
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset()
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return
+      }
+      // Time to actually perform the action
+      console.log (dragIndex + "   " + hoverIndex);
+    },
+  }
+
+
+const targetCollect= (connect,monitor) =>{
+    return{
+        connectDropTarget: connect.dropTarget(),
+    }
+}
+export default connect(null,mapDispatchToProps)(
+    DropTarget(typeToSort,workTarget,targetCollect)(
+        DragSource(typeToSort,workToSortSource,sourceCollect)(
+            DragSource(typeToDelete, workToDeleteSource , sourceCollect)(WorkItem))
+        )
+    );
 
