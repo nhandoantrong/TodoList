@@ -231,6 +231,7 @@ const mapDispatchToProps=(dispatch)=>(
 const typeToDelete ="WORK_ITEM_TO_DELETE";
 const workToDeleteSource ={
     beginDrag(props){
+        console.log ("hi");
         return props.item;
     },
     endDrag(props,monitor,component){
