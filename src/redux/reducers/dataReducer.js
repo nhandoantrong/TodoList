@@ -25,22 +25,20 @@ const data = (workList= initialState, action) =>{
             let newWorkList= [...workList];
             let index=newWorkList.findIndex(work => work.id===newWork.id);
 
-            // eslint-disable-next-line no-unused-vars
             newWorkList[index]=newWork;
-            workList=newWorkList
+            workList=newWorkList;
             localStorage.setItem('userList',JSON.stringify(workList));
             return workList;
         }
         case actionTypes.DELETE_WORK : {
-            let newWork= action.work;
-            let index=workList.findIndex(work => work.id===newWork.id);
+            let deletedWork= action.work;
+            let index=workList.findIndex(work => work.id===deletedWork.id);
             let newList= [...workList];
             newList.splice(index,1);
             workList=newList;
             localStorage.setItem('userList',JSON.stringify(workList));
-            console.log (workList);
 
-            return workList=newList;
+            return workList;
         }
         default :{
             return workList;

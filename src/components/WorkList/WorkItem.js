@@ -4,15 +4,51 @@ import Label from './Label';
 import {connect} from 'react-redux';
 import {changeToEdit} from '../../redux/actions/ChangeAddStatus';
 import {changeWork} from '../../redux/actions/EditWork';
-import {deleteWork} from '../../redux/actions/dataAction'
+import {deleteWork,editWork} from '../../redux/actions/dataAction';
+import {editRenderedList,deleteWorkInRenderedList} from '../../redux/actions/renderList'
+
+
+//drag and drop
+import { DragSource } from 'react-dnd';
+
 class WorkItem extends Component {
+
+    state ={
+        work: this.props.item
+    }
+
+    componentWillReceiveProps = (nextProps) =>{
+        if(this.props.item!==nextProps.item)
+        {
+            this.setState({
+                work:nextProps.item
+            })
+        }
+
+    }
+
+
     editButtonHandle= (work)=>{
         this.props.changeToEdit();
         this.props.changeWork(work);
     }
 
     deleteButtonHandle= (work)=>{
-        this.props.deleteWork(work)
+        this.props.deleteWork(work);
+        this.props.deleteWorkInRenderedList(work);
+    }
+
+
+    completeButtonHandle= (status)=>{
+        this.setState({
+            work:{
+                ...this.state.work,
+                status: status,
+            }
+        },()=>{
+            this.props.editWork(this.state.work);
+            this.props.editRenderedList(this.state.work);
+        })
     }
 
     renderLabel=(labels)=>{
@@ -31,15 +67,15 @@ class WorkItem extends Component {
         switch (priorityNumber){
             case 1:
             {
-                return 'Cao'
+                return 'High'
             }
             case 2:
             {
-                return 'Thấp'
+                return 'Low'
             }
             case 3:
             {
-                return 'Trung bình'
+                return 'Medium'
             }
             default:{
 
@@ -71,15 +107,25 @@ class WorkItem extends Component {
         switch (status){
             case 1:
             {
-                return <i className="fa fa-square-o mr-2"></i>
+                return <i className="fa fa-square-o mr-2"
+                    style={{cursor:"pointer"}}
+                    onClick={this.completeButtonHandle.bind(this,2)}
+                ></i>
             }
             case 2:
             {
-                return <i className="fa fa-check-square-o mr-2"></i>
+                return <i className="fa fa-check-square-o mr-2"
+                style={{cursor:"pointer"}}
+                onClick={this.completeButtonHandle.bind(this,1)}
+
+                ></i>
             }
             case 3:
             {
-                return <i className="fa fa-trash-o mr-2"></i>
+                return <i className="fa fa-trash-o mr-2"
+                style={{cursor:"pointer"}}
+                onClick={this.completeButtonHandle.bind(this,1)}
+                ></i>
             }
             default:{
                 return ''
@@ -88,8 +134,8 @@ class WorkItem extends Component {
     }
 
     render() {
-        let {index,item}= this.props;
-        return (
+        let {index,item,isDragging,connectDragSource}= this.props;
+        return connectDragSource(
 
             <tr>
                 <td className="text-center">{index+1}</td>
@@ -110,9 +156,10 @@ class WorkItem extends Component {
                         data-toggle="modal"
                         data-target="#modalTask"
                         onClick={this.editButtonHandle.bind(this,item)}
+                        style={{marginRight: "5px"}}
                     >
 
-                        Sửa
+                        Edit
                     </button>
 
 
@@ -120,9 +167,23 @@ class WorkItem extends Component {
                     <button
                         type="button"
                         className="btn btn-outline-success"
-                    >
-                        Xong
+                        onClick={item.status===1? this.completeButtonHandle.bind(this,2) : this.completeButtonHandle.bind(this,1)}
+                        style={{marginRight: "5px"}}
+
+                        >
+                        {item.status===1? 'Finished' :'Ongoing'}
                     </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-outline-warning"
+                        onClick={item.status===3? this.completeButtonHandle.bind(this,1) : this.completeButtonHandle.bind(this,3)}
+                        style={{marginRight: "5px"}}
+
+                    >
+                        {item.status===3? 'Continued' :'Terminate'}
+                    </button>
+                
 
 
 
@@ -131,7 +192,7 @@ class WorkItem extends Component {
                         className="btn btn-outline-danger"
                         onClick={this.deleteButtonHandle.bind(this,item)}
                     >
-                        Xóa
+                        Delete
                     </button>
                 </td>
                 <td className="text-center">
@@ -153,9 +214,39 @@ const mapDispatchToProps=(dispatch)=>(
       },
       deleteWork: (work) =>{
           dispatch(deleteWork(work))
+      },
+      editWork: (work) =>{
+        dispatch(editWork(work))
+      },
+      editRenderedList : (work) =>{
+          dispatch(editRenderedList(work))
+      },
+      deleteWorkInRenderedList : (work) => {
+          dispatch(deleteWorkInRenderedList(work))
       }
     }
 )
 
-  export default connect(null,mapDispatchToProps)(WorkItem);
+
+const typeToDelete ="WORK_ITEM_TO_DELETE";
+const workToDeleteSource ={
+    beginDrag(props){
+        return props.item;
+    },
+    endDrag(props,monitor,component){
+        if (monitor.didDrop()){
+            props.deleteWork(props.item);
+            props.deleteWorkInRenderedList(props.item);
+        }
+  
+    }
+}
+
+const collect =(connect, monitor) =>({
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging
+
+})
+export default connect(null,mapDispatchToProps)( DragSource(typeToDelete, workToDeleteSource , collect)(WorkItem));
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {addWork,editWork} from '../redux/actions/dataAction'
+import {addWork,editWork} from '../redux/actions/dataAction';
+import {editRenderedList} from '../redux/actions/renderList'
 class WorkModal extends Component {
 
 
@@ -11,6 +12,10 @@ class WorkModal extends Component {
             work: this.props.work,
             isAdd: this.props.isAdd
         };
+    }
+
+    inputOnClickHandle = (e) =>{
+        console.log (e.type);
     }
 
     onSubmit = (event) => {
@@ -35,6 +40,7 @@ class WorkModal extends Component {
         else 
         {
             this.props.editWork(this.state.work);
+            this.props.editRenderedList(this.state.work);
             document.getElementById("hidePopUpBtn").click();
 
         }
@@ -96,7 +102,7 @@ class WorkModal extends Component {
                         <div className="modal-content">
                             {/* Modal Header */}
                             <div className="modal-header">
-                                <h4 className="modal-title">{this.state.isAdd ? 'Thêm Công Việc' : 'Sửa Công Việc'}</h4>
+                                <h4 className="modal-title">{this.state.isAdd ? 'Add Task' : 'Edit Task'}</h4>
                                 <button
                                     type="button"
                                     className="close"
@@ -109,7 +115,7 @@ class WorkModal extends Component {
                             <form onSubmit={this.onSubmit}>
                                 <div className="modal-body">
                                     <div className="form-group">
-                                        <label htmlFor="taskName">Tên công việc:</label>
+                                        <label htmlFor="taskName">Task Name:</label>
                                         <input
                                             type="text"
                                             className="form-control"
@@ -117,10 +123,11 @@ class WorkModal extends Component {
                                             name='name'
                                             onChange={this.onchange}
                                             value={this.state.work.name}
+                                            required
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="description">Mô tả:</label>
+                                        <label htmlFor="description">Description:</label>
                                         <textarea
                                             className="form-control"
                                             rows={2}
@@ -131,18 +138,18 @@ class WorkModal extends Component {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="priority">Độ ưu tiên:</label>
+                                        <label htmlFor="priority">Priority:</label>
                                         <select className="form-control" id="priority"
                                             name='priority'
                                             onChange={this.onchange}
                                             value={this.state.work.priority }
                                         >
-                                            <option value="2" >Thấp</option>
-                                            <option value="3">Trung bình</option>
-                                            <option value="1">Cao</option>
+                                            <option value="2" >Low</option>
+                                            <option value="3">Medium</option>
+                                            <option value="1">High</option>
                                         </select>
                                     </div>
-                                    <label>Người thực hiện:</label>
+                                    <label>Excutioners:</label>
                                     <br />
                                     <div className="form-check-inline">
                                         <label className="form-check-label">
@@ -205,7 +212,7 @@ class WorkModal extends Component {
                                     </div>
                                     <br />
                                     <br />
-                                    <label >Nhãn:</label>
+                                    <label >Labels:</label>
                                     <br />
                                     <div className="form-check-inline">
                                         <label className="form-check-label">
@@ -300,6 +307,9 @@ const mapDispatchToProps = (dispatch) =>({
     },
     editWork: (work) =>{
         dispatch (editWork(work))
+    },
+    editRenderedList : (work) =>{
+        dispatch (editRenderedList(work))
     }
 })
 export default connect(mapStateToProps,mapDispatchToProps)(WorkModal);

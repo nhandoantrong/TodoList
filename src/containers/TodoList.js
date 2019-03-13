@@ -19,21 +19,11 @@ class TodoList extends Component {
         this.props.changeRenderData(this.state.data);
       }
 
-      componentWillReceiveProps(nextProps){
-        if (this.props.data!==nextProps.data)
-        {
-          this.setState({
-            data:nextProps.data
-          },()=>{
-            this.props.changeRenderData(this.state.data);
-          })
-        }
-      }
     render() {
         return (
             <div>
                 <div>
-          <h1 className="text-center my-2">QUẢN LÝ CÔNG VIỆC</h1>
+          <h1 className="text-center my-2">Work Management</h1>
           <div className="container-fluid">
             <div className="row">
               {/* PANEL */}
