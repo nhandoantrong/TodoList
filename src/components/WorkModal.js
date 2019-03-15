@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {addWork,editWork} from '../redux/actions/dataAction';
-import {editRenderedList} from '../redux/actions/renderList'
+import {editRenderedList,renderChangedList} from '../redux/actions/renderList'
 class WorkModal extends Component {
 
 
@@ -33,6 +33,8 @@ class WorkModal extends Component {
                     work: this.props.work,
                 },()=>{
                     document.getElementById("hidePopUpBtn").click();
+                    this.props.renderChangedList(this.props.data);
+
                 })
             })
 
@@ -299,6 +301,8 @@ class WorkModal extends Component {
 const mapStateToProps = (state) => ({
     isAdd: state.isAddReducer,
     work: state.editedWorkReducer,
+    data:state.dataReducer
+
 })
 
 const mapDispatchToProps = (dispatch) =>({
@@ -310,6 +314,9 @@ const mapDispatchToProps = (dispatch) =>({
     },
     editRenderedList : (work) =>{
         dispatch (editRenderedList(work))
+    },
+    renderChangedList: (workList)=>{
+        dispatch(renderChangedList(workList))
     }
 })
 export default connect(mapStateToProps,mapDispatchToProps)(WorkModal);

@@ -1,4 +1,5 @@
 import * as actionTypes from '../actionTypes/actionTypesConstant';
+import update from 'immutability-helper'
 const initialState= [];
 
 const renderedList= (workList= initialState,action)=>{
@@ -15,6 +16,16 @@ const renderedList= (workList= initialState,action)=>{
             let index = workList.findIndex(work =>work.id===action.work.id)
             workList.splice(index,1);
             return workList=[...workList];
+        }
+        case actionTypes.REORDER_WORK_IN_RENDEDER_LIST:{
+            let draggingIndex= action.draggingIndex;
+            const draggingWork = workList[draggingIndex];
+            let hoveredIndex= action.hoveredIndex;
+            workList=update(workList,{
+                $splice: [[draggingIndex, 1], [hoveredIndex, 0, draggingWork]],
+            })
+            console.log(workList);
+            return [...workList]
         }
         default :{
             return workList;

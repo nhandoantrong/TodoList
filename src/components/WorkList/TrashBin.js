@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {DropTarget} from 'react-dnd';
 import {deleteWork} from '../../redux/actions/dataAction';
-import {} from '../../redux/actions/renderList'
+import {deleteWorkInRenderedList} from '../../redux/actions/renderList'
+import {connect} from 'react-redux'
 class TrashBin extends Component {
     render() {
         const {connectDropTarget,hovered,canDrop} =this.props;
@@ -15,7 +16,19 @@ class TrashBin extends Component {
 }
 
 
-const type="WORK_ITEM_TO_DELETE";
+const type="WORK_ITEM";
+
+const dropTarget ={
+    drop(props,monitor,collect)
+    {
+        if (monitor.getItem())
+        {
+            let {item} = monitor.getItem();
+            props.deleteWork(item);
+            props.deleteWorkInRenderedList(item);
+        }
+    }
+}
 
 const collect =(connect,monitor) =>{
     return{
@@ -27,4 +40,13 @@ const collect =(connect,monitor) =>{
         dropResult: monitor.getDropResult(),
     }
 }
-export default DropTarget(type,{},collect)(TrashBin);
+
+const mapDispatchtoProps = (dispatch) =>({
+    deleteWork: (work) =>{
+        dispatch(deleteWork(work));
+    },
+    deleteWorkInRenderedList: (work) =>{
+        dispatch(deleteWorkInRenderedList(work))
+    }
+})
+export default connect(null,mapDispatchtoProps)( DropTarget(type,dropTarget,collect)(TrashBin));

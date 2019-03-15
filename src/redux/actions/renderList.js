@@ -14,3 +14,9 @@ export const deleteWorkInRenderedList = (work) => ({
     type:actionTypes.DELETE_WORK_IN_RENDERED_LIST,
     work
 })
+
+export const reorderWorkInRenderedList= (draggingIndex,hoveredIndex) =>({
+    type: actionTypes.REORDER_WORK_IN_RENDEDER_LIST,
+    draggingIndex,
+    hoveredIndex,
+})
