@@ -3,10 +3,10 @@ import TaskFuncTion from '../components/TaskFunction/TaskFuncTion';
 import WorkList from '../components/WorkList/WorkList';
 import WorkModal from '../components/WorkModal';
 
-
 //redux
 import {connect}  from 'react-redux';
 import {renderChangedList} from '../redux/actions/renderList';
+import DraggingTag from '../components/WorkList/DraggingTag';
 class TodoList extends Component {
     constructor(props) {
         super(props);
@@ -20,6 +20,7 @@ class TodoList extends Component {
       }
 
     render() {
+        
         return (
             <div>
                 <div>
@@ -27,6 +28,7 @@ class TodoList extends Component {
           <div className="container-fluid">
             <div className="row">
               {/* PANEL */}
+
               <TaskFuncTion />
               <WorkList /> 
             </div>

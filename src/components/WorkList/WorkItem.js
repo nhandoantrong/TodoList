@@ -11,6 +11,7 @@ import { editRenderedList, deleteWorkInRenderedList ,reorderWorkInRenderedList }
 //drag and drop
 import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
+import DraggingTag from './DraggingTag';
 
 
 class WorkItem extends Component {
@@ -133,16 +134,19 @@ class WorkItem extends Component {
             }
         }
     }
-
+    componentDidMount() {
+        
+      }
 
     render() {
-        let { item, connectDragSource, connectDropTarget, draggingID,onAir } = this.props;
+        let { item, connectDragSource, connectDropTarget, draggingID,onAir,connectDragPreview,itemType } = this.props;
         let opacity = item.id===draggingID? 0 : 1;
+        
         if (!onAir) opacity=1;
         return connectDragSource(connectDropTarget(
 
             <tr style={Object.assign({},style,{opacity})}>
-                <td className="text-center">{item.name}</td>
+                    <td className="text-center">{item.name}</td>
                 <td className="text-center">
                     {this.renderLabel(item.labelArr)}
                 </td>
@@ -242,10 +246,11 @@ const type = "WORK_ITEM";
 const dragSource = {
     beginDrag(props,monitor,compnent) {
         props.changeOnAirState(true);
+        
         return {
             id: props.id,
             index: props.index,
-            item: props.item
+            item: props.item,
         }
     },
     endDrag(props, monitor, component) {
@@ -266,6 +271,7 @@ const sourceCollect = (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging(),
+    itemType: monitor.getItemType(),
 
 })
 
