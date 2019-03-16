@@ -11,7 +11,8 @@ import { editRenderedList, deleteWorkInRenderedList ,reorderWorkInRenderedList }
 //drag and drop
 import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
-import DraggingTag from './DraggingTag';
+import { getEmptyImage } from 'react-dnd-html5-backend'
+
 
 
 class WorkItem extends Component {
@@ -135,11 +136,20 @@ class WorkItem extends Component {
         }
     }
     componentDidMount() {
-        
+        const { connectDragPreview } = this.props
+    if (connectDragPreview) {
+      // Use empty image as a drag preview so browsers don't draw it
+      // and we can draw whatever we want on the custom drag layer instead.
+      connectDragPreview(getEmptyImage(), {
+        // IE fallback: specify that we'd rather screenshot the node
+        // when it already knows it's being dragged so we can hide it with CSS.
+        captureDraggingState: true,
+      })
+    }
       }
 
     render() {
-        let { item, connectDragSource, connectDropTarget, draggingID,onAir,connectDragPreview,itemType } = this.props;
+        let { item, connectDragSource, connectDropTarget, draggingID,onAir } = this.props;
         let opacity = item.id===draggingID? 0 : 1;
         
         if (!onAir) opacity=1;

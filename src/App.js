@@ -3,7 +3,6 @@ import './App.css';
 import TodoList from './containers/TodoList';
 import HTML5Backend from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-dnd'
-import DraggingTag from './components/WorkList/DraggingTag';
 
 class App extends Component {
 

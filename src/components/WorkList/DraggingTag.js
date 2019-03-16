@@ -13,14 +13,14 @@ const layerStyles = {
 };
 
 function getItemStyles(props) {
-    const { initialOffset, currentOffset  } = props;
+    const { initialOffset, currentOffset, clientOffset  } = props;
     if (!initialOffset || !currentOffset) {
         return {
             display: 'none'
         };
     }
 
-    const { x, y } = currentOffset;
+    const { x, y } = clientOffset;
     const transform = `translate(${x}px, ${y}px)`;
     return {
         transform: transform,
@@ -56,6 +56,6 @@ const dragCollect = (monitor) => ({
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),
     initialOffset: monitor.getInitialSourceClientOffset(),
-
+    clientOffset: monitor.getClientOffset()
 })
 export default DragLayer(dragCollect)(DraggingTag);

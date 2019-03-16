@@ -9,6 +9,7 @@ import TrashBin from './TrashBin';
 import update from 'immutability-helper'
 
 import {renderChangedList} from '../../redux/actions/renderList'
+import DraggingTag from './DraggingTag';
 class WorkList extends Component {
 
     state ={
@@ -71,6 +72,7 @@ class WorkList extends Component {
         return (
 
             <div className="col-md-9 px-0">
+                <DraggingTag />
                 <div className="container-fluid px-0">
                   <div className="row header header--right d-flex align-items-center mx-0">
                     <div className="col-md-6">

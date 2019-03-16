@@ -6,7 +6,6 @@ import WorkModal from '../components/WorkModal';
 //redux
 import {connect}  from 'react-redux';
 import {renderChangedList} from '../redux/actions/renderList';
-import DraggingTag from '../components/WorkList/DraggingTag';
 class TodoList extends Component {
     constructor(props) {
         super(props);
